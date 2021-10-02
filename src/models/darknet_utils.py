@@ -48,6 +48,11 @@ def parse_cfg(cfgfile):
 
 
 def print_cfg(blocks):
+    '''
+    Describe:
+        This function used to show the network's structure.
+        Holy fucking shit code.
+    '''
     print('layer     filters    size              input                output')
     prev_width = 416
     prev_height = 416

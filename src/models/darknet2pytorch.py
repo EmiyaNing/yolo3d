@@ -20,6 +20,10 @@ from utils.torch_utils import to_cpu
 
 
 class Mish(nn.Module):
+    '''
+    Describe:
+        Mish activation function.
+    '''
     def __init__(self):
         super().__init__()
 
@@ -97,6 +101,10 @@ class Upsample_interpolate(nn.Module):
 
 
 class Reorg(nn.Module):
+    '''
+    Describe:
+        Focus module...Maybe.....
+    '''
     def __init__(self, stride=2):
         super(Reorg, self).__init__()
         self.stride = stride
