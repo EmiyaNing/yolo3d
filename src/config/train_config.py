@@ -135,6 +135,7 @@ def parse_train_configs():
                         help='for evaluation - the threshold for nms')
     parser.add_argument('--iou-thresh', type=float, default=0.5,
                         help='for evaluation - the threshold for IoU')
+    parser.add_argument('--no_val', type=bool, default=False)
 
     configs = edict(vars(parser.parse_args()))
 

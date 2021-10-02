@@ -160,7 +160,7 @@ if __name__ == '__main__':
             if configs.show_image:
                 cv2.imshow('test-img', out_img)
                 print('\n[INFO] Press n to see the next sample >>> Press Esc to quit...\n')
-                if cv2.waitKey(0) & 0xFF == 27:
+                if cv2.waitKey(1000) & 0xFF == 27:
                     break
     if out_cap:
         out_cap.release()

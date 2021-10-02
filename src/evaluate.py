@@ -103,11 +103,11 @@ def parse_eval_configs():
     parser.add_argument('--batch_size', type=int, default=4,
                         help='mini-batch size (default: 4)')
 
-    parser.add_argument('--conf-thresh', type=float, default=0.5,
+    parser.add_argument('--conf-thresh', type=float, default=0.75,
                         help='for evaluation - the threshold for class conf')
-    parser.add_argument('--nms-thresh', type=float, default=0.5,
+    parser.add_argument('--nms-thresh', type=float, default=0.75,
                         help='for evaluation - the threshold for nms')
-    parser.add_argument('--iou-thresh', type=float, default=0.5,
+    parser.add_argument('--iou-thresh', type=float, default=0.75,
                         help='for evaluation - the threshold for IoU')
 
     configs = edict(vars(parser.parse_args()))

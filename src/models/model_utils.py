@@ -78,13 +78,15 @@ if __name__ == '__main__':
                         help='The name of the model architecture')
     parser.add_argument('--cfgfile', type=str, default='../config/cfg/yolo3d_yolov4.cfg', metavar='PATH',
                         help='The path for cfgfile (only for darknet)')
+    parser.add_argument('--use_giou_loss', type=bool, default=True)
 
     configs = edict(vars(parser.parse_args()))
 
     configs.device = torch.device('cuda:1')
 
-    model = create_model(configs).to(device=configs.device)
-    sample_input = torch.randn((1, 3, 608, 608)).to(device=configs.device)
+    model = create_model(configs)
+    print(model)
+    sample_input = torch.randn((1, 3, 608, 608))
     # summary(model.cuda(), (3, 608, 608))
     output = model(sample_input, targets=None)
     print(output.size())

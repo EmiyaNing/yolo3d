@@ -92,32 +92,46 @@ if __name__ == '__main__':
 
     parser.add_argument('--img_size', type=int, default=608,
                         help='the size of input image')
+
     parser.add_argument('--hflip_prob', type=float, default=0.,
                         help='The probability of horizontal flip')
+
     parser.add_argument('--cutout_prob', type=float, default=0.,
                         help='The probability of cutout augmentation')
+
     parser.add_argument('--cutout_nholes', type=int, default=1,
                         help='The number of cutout area')
+
     parser.add_argument('--cutout_ratio', type=float, default=0.3,
                         help='The max ratio of the cutout area')
+
     parser.add_argument('--cutout_fill_value', type=float, default=0.,
                         help='The fill value in the cut out area, default 0. (black)')
+
     parser.add_argument('--multiscale_training', action='store_true',
                         help='If true, use scaling data for training')
+
     parser.add_argument('--num_samples', type=int, default=None,
                         help='Take a subset of the dataset to run and debug')
+
     parser.add_argument('--num_workers', type=int, default=1,
                         help='Number of threads for loading data')
+
     parser.add_argument('--batch_size', type=int, default=1,
                         help='mini-batch size (default: 1)')
+
     parser.add_argument('--mosaic', action='store_true',
                         help='If true, compose training samples as mosaics')
+
     parser.add_argument('--random-padding', action='store_true',
                         help='If true, random padding if using mosaic augmentation')
+
     parser.add_argument('--show-train-data', action='store_true',
                         help='If true, random padding if using mosaic augmentation')
+
     parser.add_argument('--output-width', type=int, default=608,
                         help='the width of showing output, the height maybe vary')
+
     parser.add_argument('--save_img', action='store_true',
                         help='If true, save the images')
 
@@ -176,7 +190,5 @@ if __name__ == '__main__':
                 cv2.imwrite(os.path.join(configs.saved_dir, fn), out_img)
             else:
                 cv2.imshow('single_sample', out_img)
-
-        if not configs.save_img:
-            if cv2.waitKey(0) & 0xff == 27:
-                break
+        if cv2.waitKey(1000) & 0xFF == ord('q'):
+            break
