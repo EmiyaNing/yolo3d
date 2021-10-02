@@ -179,7 +179,7 @@ def draw_box_in_bev(rgb_map, target):
     for j in range(50):
         if (np.sum(target[j, 1:]) == 0): continue
         cls_id = int(target[j][0])
-        x = target[j][1] * cnf.BEV_WIDTH
+        x = target[j][1] * cnf.BEV_WIDTHdata_process.kitti_data_utils.Object3d
         y = target[j][2] * cnf.BEV_HEIGHT
         w = target[j][3] * cnf.BEV_WIDTH
         l = target[j][4] * cnf.BEV_HEIGHT

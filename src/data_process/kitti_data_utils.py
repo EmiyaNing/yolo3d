@@ -46,6 +46,15 @@ class Object3d(object):
         self.score = data[15] if data.__len__() == 16 else -1.0
         self.level_str = None
         self.level = self.get_obj_level()
+    
+    def __str__(self):
+        format_str = "\tbasic information: type:%s truncation:%.3f occlusion:%.3f alpha:%.3f\n\tbox2d information: x1:%.3f y1:%.3f x2:%.3f y2:%.3f\n\tbox3d information: h:%.3f w:%.3f l:%.3f x:%.3f y:%.3f z:%.3f\n\tcamera:%.3f ry:%.3f"
+        return format_str % (self.type, self.truncation, self.occlusion,
+                             self.alpha, self.box2d[0], 
+                             self.box2d[1], self.box2d[2], self.box2d[3],
+                             self.h, self.w, self.l,
+                             self.t[0], self.t[1], self.t[2],
+                             self.dis_to_cam, self.ry)
 
     def cls_type_to_id(self, cls_type):
         # Car and Van ==> Car class

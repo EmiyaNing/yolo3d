@@ -31,6 +31,8 @@ from utils.visualization_utils import show_image_with_boxes, merge_rgb_to_bev, p
 
 def parse_test_configs():
     parser = argparse.ArgumentParser(description='Demonstration config for YOLO3D Implementation')
+    parser.add_argument('-a', '--arch', type=str, default='darknet', metavar='ARCH',
+                        help='The name of the model architecture')
     parser.add_argument('--cfgfile', type=str, default='./config/cfg/yolo3d_yolov4.cfg', metavar='PATH',
                         help='The path for cfgfile (only for darknet)')
     parser.add_argument('--pretrained_path', type=str, default=None, metavar='PATH',
@@ -53,12 +55,7 @@ def parse_test_configs():
     parser.add_argument('--nms_thresh', type=float, default=0.5,
                         help='the threshold for conf')
 
-    parser.add_argument('--save_test_output', action='store_true',
-                        help='If true, the output image of the testing phase will be saved')
-    parser.add_argument('--output_format', type=str, default='image', metavar='PATH',
-                        help='the type of the test output (support image or video)')
-    parser.add_argument('--output_video_fn', type=str, default='out_yolo3d_yolov4', metavar='PATH',
-                        help='the video filename if the output format is video')
+
 
     configs = edict(vars(parser.parse_args()))
     configs.pin_memory = True
@@ -69,9 +66,6 @@ def parse_test_configs():
     configs.root_dir = '../'
     configs.dataset_dir = os.path.join(configs.root_dir, 'dataset', 'kitti')
 
-    if configs.save_test_output:
-        configs.results_dir = os.path.join(configs.root_dir, 'results', configs.saved_fn)
-        make_folder(configs.results_dir)
 
     return configs
 
@@ -86,7 +80,7 @@ def test(model, dataloader, configs):
         # forward end
         # Do post processing
         detections = post_processing_v2(outputs, conf_thresh=configs.conf_thresh,
-                                        nms_thresh=configs.conf_nms_thresh)
+                                        nms_thresh=configs.nms_thresh)
         img_detections = []
         img_detections.extend(detections)
         img_rgb = cv2.imread(img_paths[0])
@@ -94,5 +88,26 @@ def test(model, dataloader, configs):
         # convert model output to kitti data formation
         objects_pred = predictions_to_kitti_format(img_detections, calib, img_rgb.shape, 
                                                    configs.img_size)
+        print('\tIn batch ', batch_idx, 'the models output is:')
+        for objects in objects_pred:
+            print(objects)
+            print('\n')
+        print('\n\n\n')
         print('\tDone testing the {}th sample, time: {:.1f}ms, speed {:.2f}FPS'.format(batch_idx,
                     (t2 - t1) * 1000,1 / (t2 - t1)))
+        print('\n\n\n')
+
+if __name__ == '__main__':
+    configs = parse_test_configs()
+    configs.distributed = False  # For testing
+    model = create_model(configs)
+    print('\n\n' + '-*=' * 30 + '\n\n')
+    assert os.path.isfile(configs.pretrained_path), "No file at {}".format(configs.pretrained_path)
+
+    model.load_state_dict(torch.load(configs.pretrained_path))
+
+    configs.device = torch.device('cuda:0')
+    model = model.to(device=configs.device)
+    test_dataloader = create_test_dataloader(configs)
+
+    test(model, test_dataloader, configs)
