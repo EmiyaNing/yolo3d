@@ -17,10 +17,11 @@ import torch
 from tqdm import tqdm
 from torch.utils.tensorboard import SummaryWriter
 from data_process.kitti_dataloader import create_train_dataloader, create_val_dataloader
-from models.model_utils import create_model
+from models.model_utils import create_model, get_num_parameters
 from utils.train_utils import create_optimizer, create_lr_scheduler, get_saved_state, save_checkpoint
 from utils.train_utils import to_python_float, get_tensorboard_log
 from utils.misc import AverageMeter, ProgressMeter
+from utils.logger import Logger
 from config.train_config import parse_train_configs
 from evaluate import evaluate_mAP
 
@@ -82,7 +83,7 @@ def main():
     configs = parse_train_configs()
     configs.subdivisions = int(64 / configs.batch_size)
     global_ap        = None
-
+    configs.distributed = False
 
     logger = Logger(configs.logs_dir, configs.saved_fn)
     logger.info('>>> Created a new logger')
@@ -90,6 +91,7 @@ def main():
     tb_writer = SummaryWriter(log_dir=os.path.join(configs.logs_dir, 'tensorboard'))
 
     model  = create_model(configs)
+    model  = model.cuda()
     # load the pretrain checkpoint
     if configs.pretrained_path is not None:
         assert os.path.isfile(configs.pretrained_path), "=> no checkpoint found at '{}'".format(configs.pretrained_path)
@@ -118,9 +120,8 @@ def main():
         configs.start_epoch = utils_state_dict['epoch'] + 1
 
     # logger the training parameters of model
-    if configs.is_master_node:
-        num_parameters = get_num_parameters(model)
-        logger.info('number of trained parameters of the model: {}'.format(num_parameters))
+    num_parameters = get_num_parameters(model)
+    logger.info('number of trained parameters of the model: {}'.format(num_parameters))
 
     # create train/val dataloader
     train_dataloader, train_sampler = create_train_dataloader(configs)

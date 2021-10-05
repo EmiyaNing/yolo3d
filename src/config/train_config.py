@@ -152,7 +152,7 @@ def parse_train_configs():
     ####################################################################
     configs.dataset_dir = os.path.join(configs.root_dir, 'dataset', 'kitti')
     configs.checkpoints_dir = os.path.join(configs.root_dir, 'checkpoints', configs.saved_fn)
-    configs.best_dir = os.path.join(configs.root_dir, 'best_dir', configs.best_dir)
+    configs.best_dir = os.path.join(configs.root_dir, 'best_dir', configs.saved_fn)
     configs.logs_dir = os.path.join(configs.root_dir, 'logs', configs.saved_fn)
 
     if not os.path.isdir(configs.checkpoints_dir):
