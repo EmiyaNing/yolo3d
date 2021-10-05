@@ -104,6 +104,15 @@ def save_checkpoint(checkpoints_dir, saved_fn, model_state_dict, utils_state_dic
     print('save a checkpoint at {}'.format(model_save_path))
 
 
+def save_best_checkpoint(checkpoints_dir, best_ap, model_state_dict, utils_state_dict, epoch):
+    model_save_path = os.path.join(checkpoints_dir, 'Model_bestAP_{}_epoch_{}.pth'.format(best_ap, epoch))
+    utils_save_path = os.path.join(checkpoints_dir, 'Utils_bestAP_{}_epoch_{}.pth'.format(best_ap, epoch))
+
+    torch.save(model_state_dict, model_save_path)
+    torch.save(utils_state_dict, utils_save_path)
+
+    print('save a checkpoint at {}'.format(model_save_path))
+
 def reduce_tensor(tensor, world_size):
     rt = tensor.clone()
     dist.all_reduce(rt, op=dist.reduce_op.SUM)
